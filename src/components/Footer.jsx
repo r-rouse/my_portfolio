@@ -8,7 +8,7 @@ function Footer() {
           <p className="footer-text">Connect with me</p>
           <div className="footer-links">
             <a 
-              href="https://github.com" 
+              href="https://github.com/r-rouse" 
               target="_blank" 
               rel="noopener noreferrer"
               className="footer-link"
@@ -20,7 +20,7 @@ function Footer() {
               <span>GitHub</span>
             </a>
             <a 
-              href="https://linkedin.com" 
+              href="https://www.linkedin.com/in/randall-rouse/" 
               target="_blank" 
               rel="noopener noreferrer"
               className="footer-link"
@@ -32,7 +32,7 @@ function Footer() {
               <span>LinkedIn</span>
             </a>
             <a 
-              href="mailto:your.email@example.com" 
+              href="mailto:randall.g.rouse@gmail.com" 
               className="footer-link"
               aria-label="Email"
             >
