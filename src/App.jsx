@@ -177,14 +177,21 @@ function App() {
                   An interactive tool that shows how federal tax dollars are allocated
                   based on salary, state, and tax year selections.
                 </p>
-                <div className="project-embed">
-                  <iframe
-                    title="Tax Receipt Generator"
-                    src="https://taxreceipt.netlify.app/"
-                    loading="lazy"
-                    allowFullScreen
-                  />
-                </div>
+                <a
+                  href="https://taxreceipt.netlify.app/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="project-embed-link"
+                >
+                  <div className="project-embed">
+                    <iframe
+                      title="Tax Receipt Generator"
+                      src="https://taxreceipt.netlify.app/"
+                      loading="lazy"
+                      allowFullScreen
+                    />
+                  </div>
+                </a>
                 <div className="project-tags">
                   <span className="tag">React</span>
                   <span className="tag">Data Viz</span>
@@ -207,14 +214,21 @@ function App() {
                   A comprehensive nutrition tool for tracking calories and nutritional information
                   for whole foods, helping users make informed dietary choices.
                 </p>
-                <div className="project-embed">
-                  <iframe
-                    title="Whole Food Calories"
-                    src="https://wholefoodcalories.com/"
-                    loading="lazy"
-                    allowFullScreen
-                  />
-                </div>
+                <a
+                  href="https://wholefoodcalories.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="project-embed-link"
+                >
+                  <div className="project-embed">
+                    <iframe
+                      title="Whole Food Calories"
+                      src="https://wholefoodcalories.com/"
+                      loading="lazy"
+                      allowFullScreen
+                    />
+                  </div>
+                </a>
                 <div className="project-tags">
                   <span className="tag">React</span>
                   <span className="tag">Nutrition</span>

@@ -280,6 +280,22 @@
   text-decoration: underline;
 }
 
+.project-embed-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  border-radius: 12px;
+  transition: background 0.3s ease, transform 0.2s ease;
+  cursor: pointer;
+}
+
+.project-embed-link:hover {
+  background: rgba(52, 152, 219, 0.05);
+  transform: translateY(-2px);
+}
+
 .project-embed {
   position: relative;
   width: 100%;
@@ -287,6 +303,12 @@
   border-radius: 10px;
   border: 1px solid #e5e7eb;
   background: #f8f9fa;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.project-embed-link:hover .project-embed {
+  border-color: #3498db;
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.2);
 }
 
 .project-embed iframe {
