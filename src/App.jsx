@@ -1,5 +1,7 @@
 import Navigation from './components/Navigation';
 import Footer from './components/Footer';
+import ProjectCard from './components/ProjectCard';
+import { projectsData } from './data/projectsData';
 import './App.css';
 
 function App() {
@@ -139,17 +141,17 @@ function App() {
                   <h3 className="resume-section-heading">VOLUNTEER EXPERIENCE</h3>
                   <div className="experience-item">
                     <div className="experience-header">
-                      <div>
+      <div>
                         <h4 className="experience-title">Field Technician</h4>
                         <p className="experience-company">Filidae Conservation Fund</p>
                       </div>
                       <p className="experience-location">San Francisco Bay Area</p>
-                    </div>
+      </div>
                     <p className="experience-dates">2025 – Present</p>
                     <p className="resume-text">
                       Support wildlife biologists in field data collection and GPS tracking of mountain lion movements and habitat use.
-                    </p>
-                  </div>
+        </p>
+      </div>
                 </div>
               </div>
             </div>
@@ -161,120 +163,9 @@ function App() {
           <div className="container">
             <h2 className="section-title">Projects</h2>
             <div className="projects-grid">
-              <div className="project-card project-card-embed">
-                <div className="project-header">
-                  <h3 className="project-title">Tax Receipt Generator</h3>
-                  <a
-                    href="https://taxreceipt.netlify.app/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="project-link"
-                  >
-                    Open live site
-                  </a>
-                </div>
-                <p className="project-description">
-                  An interactive tool that shows how federal tax dollars are allocated
-                  based on salary, state, and tax year selections.
-                </p>
-                <a
-                  href="https://taxreceipt.netlify.app/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="project-embed-link"
-                >
-                  <div className="project-embed">
-                    <iframe
-                      title="Tax Receipt Generator"
-                      src="https://taxreceipt.netlify.app/"
-                      loading="lazy"
-                      allowFullScreen
-                    />
-                  </div>
-                </a>
-                <div className="project-tags">
-                  <span className="tag">React</span>
-                  <span className="tag">Data Viz</span>
-                  <span className="tag">UI</span>
-                </div>
-              </div>
-              <div className="project-card project-card-embed">
-                <div className="project-header">
-                  <h3 className="project-title">Whole Food Calories</h3>
-                  <a
-                    href="https://wholefoodcalories.com/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="project-link"
-                  >
-                    Open live site
-                  </a>
-                </div>
-                <p className="project-description">
-                  A comprehensive nutrition tool for tracking calories and nutritional information
-                  for whole foods, helping users make informed dietary choices.
-                </p>
-                <a
-                  href="https://wholefoodcalories.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="project-embed-link"
-                >
-                  <div className="project-embed">
-                    <iframe
-                      title="Whole Food Calories"
-                      src="https://wholefoodcalories.com/"
-                      loading="lazy"
-                      allowFullScreen
-                    />
-                  </div>
-                </a>
-                <div className="project-tags">
-                  <span className="tag">React</span>
-                  <span className="tag">Nutrition</span>
-                  <span className="tag">Data</span>
-                </div>
-              </div>
-              <div className="project-card project-card-embed">
-                <div className="project-header">
-                  <h3 className="project-title">Retail Scraper</h3>
-                  <a
-                    href="https://retailscraper.streamlit.app/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="project-link"
-                  >
-                    Open live site
-                  </a>
-                </div>
-                <p className="project-description">
-                  A web scraping tool for retail data analysis, enabling users to extract and analyze
-                  product information from various retail websites efficiently.
-                </p>
-                <a
-                  href="https://retailscraper.streamlit.app/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="project-preview-link"
-                >
-                  <div className="project-embed project-embed-placeholder">
-                    <div className="embed-placeholder-content">
-                      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                        <line x1="9" y1="3" x2="9" y2="21"/>
-                        <line x1="3" y1="9" x2="21" y2="9"/>
-                      </svg>
-                      <p>Click to view Retail Scraper</p>
-                      <span className="embed-placeholder-subtitle">Opens in new tab</span>
-                    </div>
-                  </div>
-                </a>
-                <div className="project-tags">
-                  <span className="tag">Streamlit</span>
-                  <span className="tag">Python</span>
-                  <span className="tag">Web Scraping</span>
-                </div>
-              </div>
+              {projectsData.map((project) => (
+                <ProjectCard key={project.id} project={project} />
+              ))}
             </div>
           </div>
         </section>
