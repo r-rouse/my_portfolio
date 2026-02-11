@@ -1,3 +1,4 @@
+import BetaTesterForm from './BetaTesterForm';
 import './ProjectCard.css';
 
 function ProjectCard({ project }) {
@@ -5,19 +6,24 @@ function ProjectCard({ project }) {
     <div className="project-card project-card-embed">
       <div className="project-header">
         <h3 className="project-title">{project.title}</h3>
-        <a
-          href={project.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="project-link"
-        >
-          Open live site
-        </a>
+        {project.url && (
+          <a
+            href={project.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="project-link"
+          >
+            Open live site
+          </a>
+        )}
+        {project.isTestFlight && (
+          <span className="project-badge">TestFlight</span>
+        )}
       </div>
       <p className="project-description">
         {project.description}
       </p>
-      {project.hasIframe ? (
+      {project.hasIframe && project.url ? (
         <a
           href={project.url}
           target="_blank"
@@ -33,7 +39,7 @@ function ProjectCard({ project }) {
             />
           </div>
         </a>
-      ) : (
+      ) : project.url ? (
         <a
           href={project.url}
           target="_blank"
@@ -52,7 +58,8 @@ function ProjectCard({ project }) {
             </div>
           </div>
         </a>
-      )}
+      ) : null}
+      {project.isTestFlight && <BetaTesterForm projectTitle={project.title} />}
       <div className="project-tags">
         {project.tags.map((tag, index) => (
           <span key={index} className="tag">{tag}</span>

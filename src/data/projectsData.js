@@ -22,6 +22,15 @@ export const projectsData = [
     url: "https://retailscraper.streamlit.app/",
     tags: ["Streamlit", "Python", "Web Scraping"],
     hasIframe: false
+  },
+  {
+    id: 4,
+    title: "San Jose Flat Tire Tracker",
+    description: "A TestFlight iOS app that allows users to tag locations where they got flat tires on their bikes in San Jose. The goal is to crowd-source data and lobby the city to sweep certain high-risk areas, making cycling safer for everyone.",
+    url: null,
+    tags: ["React Native", "iOS", "TestFlight", "Crowdsourcing", "Civic Tech"],
+    hasIframe: false,
+    isTestFlight: true
   }
 ];
 

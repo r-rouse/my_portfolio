@@ -1,0 +1,125 @@
+.beta-tester-form {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+}
+
+.beta-form-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0 0 0.5rem 0;
+}
+
+.beta-form-description {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0 0 1.5rem 0;
+  line-height: 1.5;
+}
+
+.beta-form-group {
+  margin-bottom: 1rem;
+}
+
+.beta-form-group label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.beta-form-group input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  box-sizing: border-box;
+}
+
+.beta-form-group input:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.beta-form-error {
+  padding: 0.75rem;
+  background: #fee;
+  border: 1px solid #fcc;
+  border-radius: 6px;
+  color: #c33;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.beta-form-submit {
+  width: 100%;
+  padding: 0.875rem 1.5rem;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  font-family: inherit;
+}
+
+.beta-form-submit:hover {
+  background: #2980b9;
+  transform: translateY(-1px);
+}
+
+.beta-form-submit:active {
+  transform: translateY(0);
+}
+
+.beta-form-submit:disabled {
+  background: #95a5a6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.beta-form-submit:disabled:hover {
+  background: #95a5a6;
+  transform: none;
+}
+
+.beta-form-success {
+  text-align: center;
+  padding: 2rem 1rem;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: 10px;
+}
+
+.beta-form-success svg {
+  color: #3498db;
+  margin-bottom: 1rem;
+}
+
+.beta-form-success p {
+  color: #2c3e50;
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .beta-tester-form {
+    padding: 1.25rem;
+  }
+  
+  .beta-form-title {
+    font-size: 1.1rem;
+  }
+}
+

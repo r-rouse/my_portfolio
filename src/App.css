@@ -282,6 +282,15 @@
   text-decoration: underline;
 }
 
+.project-badge {
+  font-size: 0.85rem;
+  color: #fff;
+  background: #3498db;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
 .project-embed-link {
   display: block;
   text-decoration: none;
