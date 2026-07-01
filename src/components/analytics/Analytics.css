@@ -1,0 +1,284 @@
+/* Analytics dashboard — minimal styling aligned with portfolio palette */
+
+.analytics-page {
+  min-height: 100vh;
+  background: #f8f9fb;
+  color: #2c3e50;
+  padding: 6rem 2rem 2rem;
+}
+
+.analytics-header {
+  max-width: 1200px;
+  margin: 0 auto 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.analytics-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 0.25rem;
+}
+
+.analytics-subtitle {
+  margin: 0;
+  color: #64748b;
+  font-size: 1rem;
+}
+
+.analytics-header-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.analytics-updated {
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+
+.analytics-back-link {
+  color: #667eea;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.analytics-back-link:hover {
+  text-decoration: underline;
+}
+
+.analytics-error {
+  max-width: 1200px;
+  margin: 0 auto 1.5rem;
+  padding: 0.75rem 1rem;
+  background: #fef2f2;
+  color: #b91c1c;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.analytics-loading {
+  max-width: 1200px;
+  margin: 2rem auto;
+  text-align: center;
+  color: #64748b;
+}
+
+.analytics-metrics-grid {
+  max-width: 1200px;
+  margin: 0 auto 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.metric-card {
+  background: white;
+  border-radius: 10px;
+  padding: 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.metric-card-label {
+  margin: 0 0 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.metric-card-value {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #2c3e50;
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+.metric-card-subtitle {
+  margin: 0.25rem 0 0;
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+
+.analytics-panels {
+  max-width: 1200px;
+  margin: 0 auto 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .analytics-panels {
+    grid-template-columns: 1fr;
+  }
+}
+
+.analytics-panel {
+  background: white;
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.analytics-panel-full {
+  max-width: 1200px;
+  margin: 0 auto 2rem;
+}
+
+.analytics-panel-title {
+  margin: 0 0 0.25rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.analytics-panel-desc {
+  margin: 0 0 1.25rem;
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+/* Activity chart */
+.activity-chart-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+  height: 160px;
+}
+
+.activity-chart-bar-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+}
+
+.activity-chart-bar-track {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.activity-chart-bar {
+  width: 70%;
+  min-height: 2px;
+  background: linear-gradient(180deg, #667eea, #764ba2);
+  border-radius: 4px 4px 0 0;
+  transition: height 0.3s ease;
+}
+
+.activity-chart-count {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #64748b;
+  margin-top: 0.25rem;
+}
+
+.activity-chart-label {
+  font-size: 0.65rem;
+  color: #94a3b8;
+  margin-top: 0.15rem;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Chat usage */
+.chat-usage-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.chat-usage-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  background: #f8f9fb;
+  border-radius: 8px;
+}
+
+.chat-usage-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #667eea;
+}
+
+.chat-usage-label {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin-top: 0.25rem;
+}
+
+/* Event feed */
+.event-feed-empty {
+  padding: 2rem;
+  text-align: center;
+  color: #94a3b8;
+}
+
+.event-feed-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.event-feed-item {
+  display: grid;
+  grid-template-columns: 90px 1fr auto;
+  gap: 0.75rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 0.85rem;
+  align-items: center;
+}
+
+@media (max-width: 600px) {
+  .event-feed-item {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+  }
+}
+
+.event-feed-time {
+  color: #94a3b8;
+  font-variant-numeric: tabular-nums;
+}
+
+.event-feed-name {
+  font-weight: 500;
+}
+
+.event-feed-detail {
+  color: #64748b;
+}
+
+.event-feed-path {
+  color: #cbd5e1;
+  font-size: 0.75rem;
+}
+
+.analytics-footer {
+  max-width: 1200px;
+  margin: 2rem auto 0;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+
+.analytics-footer p {
+  margin: 0;
+}

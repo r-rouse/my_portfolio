@@ -1,7 +1,12 @@
 import BetaTesterForm from './BetaTesterForm';
+import { trackProjectClick } from '../hooks/usePortfolioAnalytics';
 import './ProjectCard.css';
 
 function ProjectCard({ project }) {
+  const handleProjectClick = () => {
+    trackProjectClick(project.id, project.title);
+  };
+
   return (
     <div className="project-card project-card-embed">
       <div className="project-header">
@@ -12,6 +17,7 @@ function ProjectCard({ project }) {
             target="_blank"
             rel="noopener noreferrer"
             className="project-link"
+            onClick={handleProjectClick}
           >
             Open live site
           </a>
@@ -29,6 +35,7 @@ function ProjectCard({ project }) {
           target="_blank"
           rel="noopener noreferrer"
           className="project-embed-link"
+          onClick={handleProjectClick}
         >
           <div className="project-embed">
             <iframe
@@ -45,6 +52,7 @@ function ProjectCard({ project }) {
           target="_blank"
           rel="noopener noreferrer"
           className="project-preview-link"
+          onClick={handleProjectClick}
         >
           <div className="project-embed project-embed-placeholder">
             <div className="embed-placeholder-content">

@@ -25,6 +25,7 @@
   color: #2c3e50;
   cursor: pointer;
   transition: color 0.3s ease;
+  text-decoration: none;
 }
 
 .nav-logo:hover {
@@ -51,6 +52,25 @@
 
 .nav-links button:hover {
   color: #3498db;
+}
+
+.nav-page-link {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #2c3e50;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  transition: color 0.3s ease;
+  border-radius: 6px;
+}
+
+.nav-page-link:hover {
+  color: #3498db;
+}
+
+.nav-page-link-active {
+  color: #667eea;
+  background: rgba(102, 126, 234, 0.1);
 }
 
 .nav-contact-links {
@@ -89,6 +109,11 @@
   }
   
   .nav-links button {
+    font-size: 0.9rem;
+    padding: 0.5rem;
+  }
+
+  .nav-page-link {
     font-size: 0.9rem;
     padding: 0.5rem;
   }

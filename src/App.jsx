@@ -1,14 +1,28 @@
-import Navigation from './components/Navigation';
 import Footer from './components/Footer';
 import ProjectCard from './components/ProjectCard';
+import ChatWidget from './components/ChatWidget';
 import { projectsData } from './data/projectsData';
+import { usePortfolioAnalytics, trackResumeDownload, trackExternalLink } from './hooks/usePortfolioAnalytics';
 import './App.css';
 
+function downloadResume() {
+  trackResumeDownload();
+
+  const resumeText = document.querySelector('.resume-card')?.textContent?.trim() ?? '';
+  const blob = new Blob([resumeText], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'Randall_Rouse_Resume.txt';
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
 function App() {
+  usePortfolioAnalytics();
+
   return (
     <div className="app">
-      <Navigation />
-      
       <main className="main-content">
         {/* Home Section */}
         <section id="home" className="section home-section">
@@ -23,7 +37,12 @@ function App() {
         {/* Resume Section */}
         <section id="resume" className="section resume-section">
           <div className="container">
-            <h2 className="section-title">Resume</h2>
+            <div className="resume-section-header">
+              <h2 className="section-title">Resume</h2>
+              <button type="button" className="resume-download-btn" onClick={downloadResume}>
+                Download Resume
+              </button>
+            </div>
             <div className="resume-content">
               <div className="resume-card">
                 <div className="resume-header">
@@ -33,9 +52,9 @@ function App() {
                     <p>|</p>
                     <p>(720) 930-1314</p>
                     <p>|</p>
-                    <a href="mailto:Randall.G.Rouse@gmail.com">Randall.G.Rouse@gmail.com</a>
+                    <a href="mailto:Randall.G.Rouse@gmail.com" onClick={() => trackExternalLink('Resume Email')}>Randall.G.Rouse@gmail.com</a>
                     <p>|</p>
-                    <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                    <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" onClick={() => trackExternalLink('Resume LinkedIn')}>LinkedIn</a>
                   </div>
                 </div>
 
@@ -172,6 +191,7 @@ function App() {
       </main>
 
       <Footer />
+      <ChatWidget />
     </div>
   );
 }
