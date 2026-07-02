@@ -1,19 +1,35 @@
-import Navigation from './components/Navigation';
 import Footer from './components/Footer';
 import ProjectCard from './components/ProjectCard';
+import ChatWidget from './components/ChatWidget';
 import { projectsData } from './data/projectsData';
+import { usePortfolioAnalytics, trackResumeDownload, trackExternalLink } from './hooks/usePortfolioAnalytics';
 import './App.css';
 
+const RESUME_PDF_URL = '/Randall_Rouse_Resume_2k26.pdf';
+const RESUME_PDF_FILENAME = 'Randall_Rouse_Resume_2k26.pdf';
+
+function downloadResume() {
+  trackResumeDownload();
+
+  const link = document.createElement('a');
+  link.href = RESUME_PDF_URL;
+  link.download = RESUME_PDF_FILENAME;
+  link.rel = 'noopener';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
 function App() {
+  usePortfolioAnalytics();
+
   return (
     <div className="app">
-      <Navigation />
-      
       <main className="main-content">
         {/* Home Section */}
         <section id="home" className="section home-section">
           <div className="container">
-            <h1 className="hero-title">Front End Developer</h1>
+            <h1 className="hero-title">Software Engineer</h1>
             <p className="hero-subtitle">
               Crafting beautiful and functional user experiences
             </p>
@@ -23,7 +39,12 @@ function App() {
         {/* Resume Section */}
         <section id="resume" className="section resume-section">
           <div className="container">
-            <h2 className="section-title">Resume</h2>
+            <div className="resume-section-header">
+              <h2 className="section-title">Resume</h2>
+              <button type="button" className="resume-download-btn" onClick={downloadResume}>
+                Download Resume
+              </button>
+            </div>
             <div className="resume-content">
               <div className="resume-card">
                 <div className="resume-header">
@@ -33,16 +54,16 @@ function App() {
                     <p>|</p>
                     <p>(720) 930-1314</p>
                     <p>|</p>
-                    <a href="mailto:Randall.G.Rouse@gmail.com">Randall.G.Rouse@gmail.com</a>
+                    <a href="mailto:Randall.G.Rouse@gmail.com" onClick={() => trackExternalLink('Resume Email')}>Randall.G.Rouse@gmail.com</a>
                     <p>|</p>
-                    <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                    <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" onClick={() => trackExternalLink('Resume LinkedIn')}>LinkedIn</a>
                   </div>
                 </div>
 
                 <div className="resume-section-item">
                   <h3 className="resume-section-heading">SUMMARY</h3>
                   <p className="resume-text">
-                    Full-stack developer specializing in React Native mobile development. Experienced in building and deploying high-performance, data-driven applications. Skilled in modern DevOps and Agile practices, with experience mentoring developers and coordinating project initiatives. Passionate about generative AI, automation, and emerging technologies that redefine how users and software interact.
+                    Full-stack software engineer with experience in React Native mobile development and AI agent integration for enterprise analytics. Experienced in building and deploying high-performance, data-driven applications and connecting LLM-driven workflows with production systems. Skilled in modern DevOps and Agile practices, with experience mentoring developers and coordinating project initiatives. Passionate about generative AI, multi-agent orchestration, and emerging technologies that redefine how users and software interact.
                   </p>
                 </div>
 
@@ -56,7 +77,7 @@ function App() {
                       <strong>Frameworks & Libraries:</strong> React Native, React, Node.js, Express, MobX, Jest, React Testing Library
                     </div>
                     <div className="skill-category">
-                      <strong>AI & Emerging Tech:</strong> LLMs, Cursor, Crew.ai, Prompt Engineering
+                      <strong>AI & Emerging Tech:</strong> LLMs, Multi-Agent Systems, RAG, Vector Search, Prompt Engineering, Cursor, Crew.ai
                     </div>
                     <div className="skill-category">
                       <strong>DevOps & Tools:</strong> Git, GitHub, Docker, Kubernetes, Jenkins, Xcode, Android Studio
@@ -78,12 +99,31 @@ function App() {
                   <div className="experience-item">
                     <div className="experience-header">
                       <div>
+                        <h4 className="experience-title">Software Engineer</h4>
+                        <p className="experience-company">IBM — Cognos Analytics AI Integration Team</p>
+                      </div>
+                      <p className="experience-location">San Jose, CA</p>
+                    </div>
+                    <p className="experience-dates">2026 – Present</p>
+                    <ul className="experience-list">
+                      <li>Developed AI agents within a supervised multi-agent orchestration framework to support analytics and modeling workflows in IBM Cognos Analytics.</li>
+                      <li>Designed prompts, tool definitions, and execution flows enabling LLM-driven agents to interact with enterprise analytics services and backend APIs.</li>
+                      <li>Built integrations between conversational AI interfaces and traditional application workflows, allowing users to perform modeling operations through natural language interactions.</li>
+                      <li>Implemented agent tooling and API interfaces for calculation generation, metadata retrieval, validation, and analytics-related actions.</li>
+                      <li>Collaborated across frontend and backend teams to connect agentic workflows with existing enterprise UI and service architectures.</li>
+                      <li>Developed evaluation and testing processes to compare model performance, measure output quality, and improve reliability of AI-generated calculations.</li>
+                      <li>Worked with vector search, semantic retrieval, and structured tool-calling patterns to improve agent accuracy and task completion.</li>
+                    </ul>
+                  </div>
+                  <div className="experience-item">
+                    <div className="experience-header">
+                      <div>
                         <h4 className="experience-title">Frontend Software Engineer</h4>
                         <p className="experience-company">IBM - Cognos Analytics Mobile</p>
                       </div>
                       <p className="experience-location">San Jose, CA</p>
                     </div>
-                    <p className="experience-dates">Feb 2022 - Present</p>
+                    <p className="experience-dates">Feb 2022 – 2026</p>
                     <ul className="experience-list">
                       <li>Led mobile app development using React Native and MobX, driving major feature rollouts and app refactors.</li>
                       <li>Managed app builds and deployments to the Apple App Store/GooglePlay Store, ensuring compliance with security and review standards.</li>
@@ -172,6 +212,7 @@ function App() {
       </main>
 
       <Footer />
+      <ChatWidget />
     </div>
   );
 }

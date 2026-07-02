@@ -50,6 +50,35 @@
   background: #ffffff;
 }
 
+.resume-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+  flex-wrap: wrap;
+}
+
+.resume-section-header .section-title {
+  margin-bottom: 0;
+}
+
+.resume-download-btn {
+  padding: 0.6rem 1.25rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.resume-download-btn:hover {
+  opacity: 0.9;
+}
+
 .section-title {
   font-size: 2.5rem;
   font-weight: 600;
