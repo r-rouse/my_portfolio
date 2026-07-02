@@ -24,8 +24,11 @@ import type {
   AnalyticsStorage,
 } from './analyticsTypes';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const DATA_DIR = join(__dirname, '../../data');
+// Note: do NOT name this `__dirname`. Netlify's function bundler injects its
+// own `__dirname` into the ESM output, and a second declaration here crashes
+// the whole function on load ("Identifier '__dirname' has already been declared").
+const moduleDir = dirname(fileURLToPath(import.meta.url));
+const DATA_DIR = join(moduleDir, '../../data');
 const EVENTS_FILE = join(DATA_DIR, 'analytics-events.json');
 const MAX_STORED_EVENTS = 10_000;
 const RECENT_FEED_LIMIT = 50;
