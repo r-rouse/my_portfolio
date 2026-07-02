@@ -18,6 +18,6 @@
       "@/*": ["src/*"]
     }
   },
-  "include": ["src", "lib", "app", "server"],
+  "include": ["src", "lib", "app", "server", "netlify"],
   "exclude": ["node_modules", "dist"]
 }
