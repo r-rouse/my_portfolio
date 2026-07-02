@@ -233,14 +233,35 @@
 
 @media (max-width: 480px) {
   .chat-widget {
-    bottom: 1rem;
-    right: 1rem;
+    bottom: max(1rem, env(safe-area-inset-bottom));
+    right: max(1rem, env(safe-area-inset-right));
   }
 
   .chat-window {
-    width: calc(100vw - 2rem);
-    height: calc(100vh - 7rem);
+    position: fixed;
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: calc(3.5rem + 0.75rem + env(safe-area-inset-bottom));
+    width: auto;
+    height: min(32rem, calc(100dvh - 6rem));
     max-height: none;
-    bottom: calc(3.5rem + 0.75rem);
+  }
+
+  .chat-toggle {
+    width: 3.25rem;
+    height: 3.25rem;
+  }
+
+  .chat-header {
+    padding: 0.85rem 1rem;
+  }
+
+  .chat-header-title {
+    font-size: 0.95rem;
+  }
+
+  .chat-message-bubble {
+    max-width: 90%;
+    font-size: 0.85rem;
   }
 }

@@ -117,8 +117,81 @@
 }
 
 @media (max-width: 768px) {
+  .analytics-page {
+    padding: 5rem 1rem 1.5rem;
+  }
+
+  .analytics-header {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+  }
+
+  .analytics-title {
+    font-size: 1.6rem;
+  }
+
+  .analytics-header-actions {
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .analytics-metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  .metric-card {
+    padding: 1rem;
+  }
+
+  .metric-card-value {
+    font-size: 1.4rem;
+  }
+
   .analytics-panels {
     grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .analytics-panel {
+    padding: 1.25rem;
+  }
+
+  .activity-chart-bars {
+    gap: 0.25rem;
+    height: 140px;
+  }
+
+  .activity-chart-label {
+    font-size: 0.55rem;
+  }
+
+  .chat-usage-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .analytics-page {
+    padding: 4.5rem 0.75rem 1rem;
+  }
+
+  .analytics-metrics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .chat-usage-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .activity-chart-bars {
+    height: 120px;
+  }
+
+  .activity-chart-count {
+    font-size: 0.6rem;
   }
 }
 
