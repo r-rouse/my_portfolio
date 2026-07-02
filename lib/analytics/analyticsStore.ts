@@ -16,7 +16,7 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { getStore, type Store } from '@netlify/blobs';
+import type { Store } from '@netlify/blobs';
 import type {
   ActivityBucket,
   AnalyticsEvent,
@@ -47,15 +47,18 @@ const BLOB_EVENTS_KEY = 'events';
  * Move to an append-friendly store (Redis Streams, Postgres) if that matters.
  */
 class BlobsAnalyticsStore implements AnalyticsStorage {
-  private store: Store;
+  private store!: Store;
 
-  constructor() {
+  /**
+   * Loads @netlify/blobs lazily and probes the store. Importing dynamically
+   * (rather than at module top level) ensures that if the package or the
+   * Blobs runtime is unavailable, the failure is a catchable rejection here —
+   * it can't crash the whole function on load and turn into a 502.
+   */
+  async init(): Promise<void> {
+    const { getStore } = await import('@netlify/blobs');
     // Strong consistency so a GET reflects writes made moments earlier.
     this.store = getStore({ name: BLOB_STORE_NAME, consistency: 'strong' });
-  }
-
-  /** Probes the blob store so callers can detect an unusable environment. */
-  async init(): Promise<void> {
     await this.load();
   }
 
