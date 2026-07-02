@@ -6,7 +6,7 @@ Randall Rouse is a Front End Developer based in San Jose, CA who crafts beautifu
 
 ## Summary
 
-Full-stack developer specializing in React Native mobile development. Experienced in building and deploying high-performance, data-driven applications. Skilled in modern DevOps and Agile practices, with experience mentoring developers and coordinating project initiatives. Passionate about generative AI, automation, and emerging technologies that redefine how users and software interact.
+Full-stack software engineer with experience in React Native mobile development and AI agent integration for enterprise analytics. Experienced in building and deploying high-performance, data-driven applications and connecting LLM-driven workflows with production systems. Skilled in modern DevOps and Agile practices, with experience mentoring developers and coordinating project initiatives. Passionate about generative AI, multi-agent orchestration, and emerging technologies that redefine how users and software interact.
 
 ## Contact
 

@@ -10,7 +10,7 @@ React Native, React, Node.js, Express, MobX, Jest, React Testing Library
 
 ## AI & Emerging Tech
 
-LLMs, Cursor, Crew.ai, Prompt Engineering
+LLMs, Multi-Agent Systems, RAG, Vector Search, Prompt Engineering, Cursor, Crew.ai
 
 ## DevOps & Tools
 

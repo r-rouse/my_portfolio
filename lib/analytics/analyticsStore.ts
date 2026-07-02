@@ -28,8 +28,7 @@ const DATA_DIR = join(__dirname, '../../data');
 const EVENTS_FILE = join(DATA_DIR, 'analytics-events.json');
 const MAX_STORED_EVENTS = 10_000;
 const RECENT_FEED_LIMIT = 50;
-const ACTIVITY_BUCKET_MINUTES = 15;
-const ACTIVITY_BUCKET_COUNT = 12;
+const ACTIVITY_BUCKET_DAYS = 14;
 
 class InMemoryAnalyticsStore implements AnalyticsStorage {
   private events: AnalyticsEvent[] = [];
@@ -169,19 +168,30 @@ function topKey(map: Map<string, number>): string | null {
   return top;
 }
 
-function buildActivityBuckets(events: AnalyticsEvent[]): ActivityBucket[] {
-  const now = Date.now();
-  const bucketMs = ACTIVITY_BUCKET_MINUTES * 60 * 1000;
-  const buckets: ActivityBucket[] = [];
+function startOfDay(date: Date): Date {
+  const day = new Date(date);
+  day.setHours(0, 0, 0, 0);
+  return day;
+}
 
-  for (let i = ACTIVITY_BUCKET_COUNT - 1; i >= 0; i--) {
-    const bucketEnd = now - i * bucketMs;
-    const bucketStart = bucketEnd - bucketMs;
-    const label = formatBucketLabel(new Date(bucketStart));
+function buildActivityBuckets(events: AnalyticsEvent[]): ActivityBucket[] {
+  const buckets: ActivityBucket[] = [];
+  const today = startOfDay(new Date());
+
+  for (let i = ACTIVITY_BUCKET_DAYS - 1; i >= 0; i--) {
+    const bucketStart = new Date(today);
+    bucketStart.setDate(bucketStart.getDate() - i);
+
+    const bucketEnd = new Date(bucketStart);
+    bucketEnd.setDate(bucketEnd.getDate() + 1);
+
+    const label = formatBucketLabel(bucketStart);
+    const startMs = bucketStart.getTime();
+    const endMs = bucketEnd.getTime();
 
     const count = events.filter((e) => {
       const ts = new Date(e.timestamp).getTime();
-      return ts >= bucketStart && ts < bucketEnd;
+      return ts >= startMs && ts < endMs;
     }).length;
 
     buckets.push({ label, count });
@@ -191,7 +201,7 @@ function buildActivityBuckets(events: AnalyticsEvent[]): ActivityBucket[] {
 }
 
 function formatBucketLabel(date: Date): string {
-  return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
 // Singleton store — shared across API requests within the same server process.

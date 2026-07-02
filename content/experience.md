@@ -1,9 +1,21 @@
 # Experience
 
+## Software Engineer — IBM (Cognos Analytics AI Integration Team)
+
+- **Location:** San Jose, CA
+- **Dates:** 2026 – Present
+- Developed AI agents within a supervised multi-agent orchestration framework to support analytics and modeling workflows in IBM Cognos Analytics.
+- Designed prompts, tool definitions, and execution flows enabling LLM-driven agents to interact with enterprise analytics services and backend APIs.
+- Built integrations between conversational AI interfaces and traditional application workflows, allowing users to perform modeling operations through natural language interactions.
+- Implemented agent tooling and API interfaces for calculation generation, metadata retrieval, validation, and analytics-related actions.
+- Collaborated across frontend and backend teams to connect agentic workflows with existing enterprise UI and service architectures.
+- Developed evaluation and testing processes to compare model performance, measure output quality, and improve reliability of AI-generated calculations.
+- Worked with vector search, semantic retrieval, and structured tool-calling patterns to improve agent accuracy and task completion.
+
 ## Frontend Software Engineer — IBM (Cognos Analytics Mobile)
 
 - **Location:** San Jose, CA
-- **Dates:** Feb 2022 - Present
+- **Dates:** Feb 2022 – 2026
 - Led mobile app development using React Native and MobX, driving major feature rollouts and app refactors.
 - Managed app builds and deployments to the Apple App Store and Google Play Store, ensuring compliance with security and review standards.
 - Instrumented analytics with Segment and Amplitude to track user behavior and improve UX insights.

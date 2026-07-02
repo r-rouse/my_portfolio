@@ -108,7 +108,7 @@ export default function AnalyticsDashboard() {
           <div className="analytics-panels">
             <section className="analytics-panel">
               <h2 className="analytics-panel-title">Activity Over Time</h2>
-              <p className="analytics-panel-desc">Events per 15-minute window</p>
+              <p className="analytics-panel-desc">Events per day (last 14 days)</p>
               <ActivityChart buckets={metrics.activityOverTime} />
             </section>
 

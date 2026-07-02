@@ -40,7 +40,7 @@ http://localhost:5173/analytics
 | Messages Sent | Count of `chat_message_sent` events |
 | Most Viewed Page | Section with the most `page_view` / `source_viewed` activity |
 | Most Clicked Project | Project title with the most `project_clicked` events |
-| Activity Over Time | Bar chart — events per 15-minute window (last 3 hours) |
+| Activity Over Time | Bar chart — events per day (last 14 days) |
 | Chat Usage Summary | Opens, messages, responses, average response time |
 | Recent Activity | Live feed of the 50 most recent events |
 
