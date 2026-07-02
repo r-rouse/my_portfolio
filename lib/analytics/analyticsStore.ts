@@ -1,21 +1,22 @@
 /**
- * Analytics storage layer — Phase 1: in-memory + optional JSON file persistence.
+ * Analytics storage layer.
  *
- * TODO: Replace with a production-grade backend:
- *   - Supabase (real-time subscriptions + Postgres)
- *   - Postgres (durable event warehouse)
- *   - ClickHouse (high-volume analytics queries)
- *   - Redis Streams (real-time pub/sub + short-term buffer)
- *   - Segment / Amplitude (managed product analytics)
- *   - OpenTelemetry (unified observability pipeline)
+ * Two interchangeable backends implement the shared AnalyticsStorage contract:
+ *   - BlobsAnalyticsStore   → production (Netlify Blobs; durable, shared across
+ *                             the ephemeral function instances Netlify spins up)
+ *   - InMemoryAnalyticsStore → local dev (in-memory + a JSON file on disk)
  *
- * The AnalyticsStorage interface keeps this swap isolated from API routes
- * and client instrumentation.
+ * getAnalyticsStore() picks the right one at runtime, so the API routes and
+ * client instrumentation never change.
+ *
+ * Future upgrades (Postgres, ClickHouse, Redis Streams, Segment/Amplitude, …)
+ * only need a new class behind this same interface.
  */
 
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { getStore, type Store } from '@netlify/blobs';
 import type {
   ActivityBucket,
   AnalyticsEvent,
@@ -30,6 +31,65 @@ const MAX_STORED_EVENTS = 10_000;
 const RECENT_FEED_LIMIT = 50;
 const ACTIVITY_BUCKET_DAYS = 14;
 
+const BLOB_STORE_NAME = 'analytics';
+const BLOB_EVENTS_KEY = 'events';
+
+/**
+ * Netlify Blobs backend (production).
+ *
+ * Netlify Functions inject the Blobs context automatically, so no site ID or
+ * token is required at runtime. Each instance is stateless: we read the current
+ * event list from the blob, mutate, and write it back. That guarantees the
+ * dashboard sees events recorded by any other function instance.
+ *
+ * Note: this is a read-modify-write with no locking. For a portfolio's traffic
+ * that's fine; under heavy concurrent writes a rare event could be dropped.
+ * Move to an append-friendly store (Redis Streams, Postgres) if that matters.
+ */
+class BlobsAnalyticsStore implements AnalyticsStorage {
+  private store: Store;
+
+  constructor() {
+    // Strong consistency so a GET reflects writes made moments earlier.
+    this.store = getStore({ name: BLOB_STORE_NAME, consistency: 'strong' });
+  }
+
+  /** Probes the blob store so callers can detect an unusable environment. */
+  async init(): Promise<void> {
+    await this.load();
+  }
+
+  private async load(): Promise<AnalyticsEvent[]> {
+    const data = await this.store.get(BLOB_EVENTS_KEY, { type: 'json' });
+    return Array.isArray(data) ? (data as AnalyticsEvent[]) : [];
+  }
+
+  async addEvent(event: AnalyticsEvent): Promise<void> {
+    const events = await this.load();
+    events.push(event);
+    const trimmed =
+      events.length > MAX_STORED_EVENTS
+        ? events.slice(-MAX_STORED_EVENTS)
+        : events;
+    await this.store.setJSON(BLOB_EVENTS_KEY, trimmed);
+  }
+
+  async getEvents(options?: { limit?: number }): Promise<AnalyticsEvent[]> {
+    const events = await this.load();
+    const limit = options?.limit ?? events.length;
+    return events.slice(-limit);
+  }
+
+  async getMetrics(): Promise<AnalyticsMetrics> {
+    return computeMetrics(await this.load());
+  }
+}
+
+/**
+ * In-memory backend with optional JSON-file persistence (local dev).
+ * The filesystem write is a no-op on read-only serverless hosts, which is why
+ * production uses the Blobs backend instead.
+ */
 class InMemoryAnalyticsStore implements AnalyticsStorage {
   private events: AnalyticsEvent[] = [];
   private persistEnabled: boolean;
@@ -64,9 +124,6 @@ class InMemoryAnalyticsStore implements AnalyticsStorage {
     if (this.persistEnabled) {
       await this.persist();
     }
-
-    // TODO: Publish event to Redis pub/sub or WebSocket broadcast here
-    // so connected dashboard clients receive updates without polling.
   }
 
   async getEvents(options?: { limit?: number }): Promise<AnalyticsEvent[]> {
@@ -75,71 +132,7 @@ class InMemoryAnalyticsStore implements AnalyticsStorage {
   }
 
   async getMetrics(): Promise<AnalyticsMetrics> {
-    const events = this.events;
-
-    const sessionIds = new Set<string>();
-    let totalPageViews = 0;
-    let totalChatOpens = 0;
-    let totalMessagesSent = 0;
-    let responsesReceived = 0;
-    const pageViewCounts = new Map<string, number>();
-    const projectClickCounts = new Map<string, number>();
-    const responseTimes: number[] = [];
-
-    for (const event of events) {
-      sessionIds.add(event.sessionId);
-
-      switch (event.eventName) {
-        case 'page_view':
-          totalPageViews += 1;
-          incrementCount(pageViewCounts, String(event.metadata?.section ?? event.path));
-          break;
-        case 'chat_opened':
-          totalChatOpens += 1;
-          break;
-        case 'chat_message_sent':
-          totalMessagesSent += 1;
-          break;
-        case 'chat_response_received':
-          responsesReceived += 1;
-          if (typeof event.metadata?.responseTimeMs === 'number') {
-            responseTimes.push(event.metadata.responseTimeMs);
-          }
-          break;
-        case 'project_clicked':
-          incrementCount(
-            projectClickCounts,
-            String(event.metadata?.projectTitle ?? 'Unknown')
-          );
-          break;
-        default:
-          break;
-      }
-    }
-
-    const avgResponseTimeMs =
-      responseTimes.length > 0
-        ? Math.round(
-            responseTimes.reduce((sum, t) => sum + t, 0) / responseTimes.length
-          )
-        : null;
-
-    return {
-      totalSessions: sessionIds.size,
-      totalPageViews,
-      totalChatOpens,
-      totalMessagesSent,
-      mostViewedPage: topKey(pageViewCounts),
-      mostClickedProject: topKey(projectClickCounts),
-      chatUsageSummary: {
-        opens: totalChatOpens,
-        messagesSent: totalMessagesSent,
-        responsesReceived,
-        avgResponseTimeMs,
-      },
-      activityOverTime: buildActivityBuckets(events),
-      recentEvents: events.slice(-RECENT_FEED_LIMIT).reverse(),
-    };
+    return computeMetrics(this.events);
   }
 
   private async persist(): Promise<void> {
@@ -150,6 +143,73 @@ class InMemoryAnalyticsStore implements AnalyticsStorage {
       console.error('[analyticsStore] Failed to persist events:', error);
     }
   }
+}
+
+/** Aggregates a flat event list into the dashboard metrics shape. */
+function computeMetrics(events: AnalyticsEvent[]): AnalyticsMetrics {
+  const sessionIds = new Set<string>();
+  let totalPageViews = 0;
+  let totalChatOpens = 0;
+  let totalMessagesSent = 0;
+  let responsesReceived = 0;
+  const pageViewCounts = new Map<string, number>();
+  const projectClickCounts = new Map<string, number>();
+  const responseTimes: number[] = [];
+
+  for (const event of events) {
+    sessionIds.add(event.sessionId);
+
+    switch (event.eventName) {
+      case 'page_view':
+        totalPageViews += 1;
+        incrementCount(pageViewCounts, String(event.metadata?.section ?? event.path));
+        break;
+      case 'chat_opened':
+        totalChatOpens += 1;
+        break;
+      case 'chat_message_sent':
+        totalMessagesSent += 1;
+        break;
+      case 'chat_response_received':
+        responsesReceived += 1;
+        if (typeof event.metadata?.responseTimeMs === 'number') {
+          responseTimes.push(event.metadata.responseTimeMs);
+        }
+        break;
+      case 'project_clicked':
+        incrementCount(
+          projectClickCounts,
+          String(event.metadata?.projectTitle ?? 'Unknown')
+        );
+        break;
+      default:
+        break;
+    }
+  }
+
+  const avgResponseTimeMs =
+    responseTimes.length > 0
+      ? Math.round(
+          responseTimes.reduce((sum, t) => sum + t, 0) / responseTimes.length
+        )
+      : null;
+
+  return {
+    totalSessions: sessionIds.size,
+    totalPageViews,
+    totalChatOpens,
+    totalMessagesSent,
+    mostViewedPage: topKey(pageViewCounts),
+    mostClickedProject: topKey(projectClickCounts),
+    chatUsageSummary: {
+      opens: totalChatOpens,
+      messagesSent: totalMessagesSent,
+      responsesReceived,
+      avgResponseTimeMs,
+    },
+    activityOverTime: buildActivityBuckets(events),
+    recentEvents: events.slice(-RECENT_FEED_LIMIT).reverse(),
+  };
 }
 
 function incrementCount(map: Map<string, number>, key: string): void {
@@ -204,14 +264,40 @@ function formatBucketLabel(date: Date): string {
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
-// Singleton store — shared across API requests within the same server process.
-const store = new InMemoryAnalyticsStore();
-let initPromise: Promise<void> | null = null;
+/** True when the Netlify Blobs runtime context is available (i.e. on Netlify). */
+function blobsContextAvailable(): boolean {
+  return Boolean(
+    process.env.NETLIFY_BLOBS_CONTEXT ||
+      process.env.NETLIFY ||
+      process.env.NETLIFY_LOCAL
+  );
+}
+
+// Cache the resolved store per process so warm function instances reuse it.
+let storePromise: Promise<AnalyticsStorage> | null = null;
 
 export async function getAnalyticsStore(): Promise<AnalyticsStorage> {
-  if (!initPromise) {
-    initPromise = store.init();
+  if (!storePromise) {
+    storePromise = resolveStore();
   }
-  await initPromise;
-  return store;
+  return storePromise;
+}
+
+async function resolveStore(): Promise<AnalyticsStorage> {
+  if (blobsContextAvailable()) {
+    try {
+      const blobs = new BlobsAnalyticsStore();
+      await blobs.init();
+      return blobs;
+    } catch (error) {
+      console.error(
+        '[analyticsStore] Netlify Blobs unavailable, falling back to in-memory:',
+        error
+      );
+    }
+  }
+
+  const fallback = new InMemoryAnalyticsStore();
+  await fallback.init();
+  return fallback;
 }
