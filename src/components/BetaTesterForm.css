@@ -1,23 +1,24 @@
 .beta-tester-form {
-  margin-top: 1.5rem;
-  padding: 1.5rem;
-  background: var(--bg-subtle);
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
+  margin-top: 1.25rem;
+  padding: 1.25rem;
+  background: var(--gray-100);
+  border: 3px solid var(--black);
 }
 
 .beta-form-title {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--ink);
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--black);
   margin: 0 0 0.5rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
 .beta-form-description {
-  font-size: 0.88rem;
+  font-size: 0.85rem;
   color: var(--ink-secondary);
-  margin: 0 0 1.5rem 0;
-  line-height: 1.55;
+  margin: 0 0 1.25rem 0;
+  line-height: 1.5;
 }
 
 .beta-form-group {
@@ -26,97 +27,100 @@
 
 .beta-form-group label {
   display: block;
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--ink-muted);
-  margin-bottom: 0.5rem;
+  color: var(--black);
+  margin-bottom: 0.4rem;
 }
 
 .beta-form-group input {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-sm);
+  border: 2px solid var(--black);
+  border-radius: 0;
   font-size: 0.95rem;
   font-family: inherit;
-  color: var(--ink);
-  background: var(--bg);
-  transition: border-color 0.2s ease;
+  color: var(--black);
+  background: var(--white);
+  transition: border-color 0.15s ease;
   box-sizing: border-box;
 }
 
 .beta-form-group input:focus {
   outline: none;
-  border-color: var(--ink);
+  border-color: var(--bauhaus-blue);
 }
 
 .beta-form-error {
   padding: 0.75rem;
-  background: var(--bg-muted);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-sm);
-  color: var(--ink);
-  font-size: 0.88rem;
+  background: var(--bauhaus-red);
+  color: var(--white);
+  border: 2px solid var(--black);
+  font-size: 0.85rem;
+  font-weight: 600;
   margin-bottom: 1rem;
 }
 
 .beta-form-submit {
   width: 100%;
   padding: 0.85rem 1.5rem;
-  background: var(--ink);
-  color: var(--bg);
-  border: 1px solid var(--ink);
-  border-radius: var(--radius-sm);
-  font-size: 0.8rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
+  background: var(--bauhaus-blue);
+  color: var(--white);
+  border: 3px solid var(--black);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease;
+  transition: background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
   font-family: inherit;
 }
 
 .beta-form-submit:hover {
-  background: transparent;
-  color: var(--ink);
+  background: var(--black);
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0 var(--bauhaus-yellow);
 }
 
 .beta-form-submit:disabled {
-  background: var(--bg-muted);
-  border-color: var(--border-strong);
+  background: var(--gray-200);
   color: var(--ink-muted);
   cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 .beta-form-submit:disabled:hover {
-  background: var(--bg-muted);
-  color: var(--ink-muted);
+  background: var(--gray-200);
+  transform: none;
+  box-shadow: none;
 }
 
 .beta-form-success {
   text-align: center;
   padding: 2rem 1rem;
-  background: var(--bg-subtle);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  background: var(--bauhaus-yellow);
+  border: 3px solid var(--black);
 }
 
 .beta-form-success svg {
-  color: var(--ink);
+  color: var(--black);
   margin-bottom: 1rem;
 }
 
 .beta-form-success p {
-  color: var(--ink);
-  font-size: 0.95rem;
-  font-weight: 500;
+  color: var(--black);
+  font-size: 0.9rem;
+  font-weight: 700;
   margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
 @media (max-width: 768px) {
   .beta-tester-form {
-    padding: 1.25rem;
+    padding: 1rem;
   }
 }

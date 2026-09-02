@@ -1,9 +1,9 @@
 .footer {
-  background: var(--bg);
-  color: var(--ink);
-  padding: 4rem 0 2rem;
+  background: var(--black);
+  color: var(--white);
+  padding: 3rem 0 1.5rem;
   margin-top: 0;
-  border-top: 1px solid var(--border);
+  border-top: 6px solid var(--bauhaus-red);
 }
 
 .footer-container {
@@ -17,21 +17,21 @@
   flex-direction: column;
   align-items: center;
   gap: 1.5rem;
-  margin-bottom: 2.5rem;
+  margin-bottom: 2rem;
 }
 
 .footer-text {
-  font-family: var(--font-serif);
-  font-size: 1.35rem;
-  font-weight: 500;
+  font-size: 1.25rem;
+  font-weight: 800;
   margin: 0;
-  color: var(--ink);
-  letter-spacing: -0.01em;
+  color: var(--white);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .footer-links {
   display: flex;
-  gap: 2rem;
+  gap: 0;
   flex-wrap: wrap;
   justify-content: center;
 }
@@ -40,39 +40,46 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: var(--ink-secondary);
+  color: var(--white);
   text-decoration: none;
-  transition: color 0.2s ease;
-  font-weight: 500;
-  font-size: 0.85rem;
-  letter-spacing: 0.03em;
+  transition: background 0.15s ease, color 0.15s ease;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.75rem 1.25rem;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  margin: 0.25rem;
 }
 
 .footer-link:hover {
-  color: var(--ink);
+  background: var(--bauhaus-yellow);
+  color: var(--black);
+  border-color: var(--bauhaus-yellow);
 }
 
 .footer-link svg {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
 }
 
 .footer-bottom {
   text-align: center;
-  padding-top: 2rem;
-  border-top: 1px solid var(--border);
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .footer-bottom p {
   margin: 0;
-  font-size: 0.8rem;
-  color: var(--ink-muted);
-  letter-spacing: 0.02em;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.55);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 @media (max-width: 768px) {
   .footer {
-    padding: 3rem 0 1.5rem;
+    padding: 2.5rem 0 1.25rem;
   }
 
   .footer-container {
@@ -80,13 +87,19 @@
   }
 
   .footer-links {
-    gap: 1.25rem;
     flex-direction: column;
-    align-items: center;
+    align-items: stretch;
+    width: 100%;
+    max-width: 280px;
+  }
+
+  .footer-link {
+    justify-content: center;
+    margin: 0.15rem 0;
   }
 
   .footer-text {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     text-align: center;
   }
 }

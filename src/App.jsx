@@ -28,7 +28,12 @@ function App() {
       <main className="main-content">
         {/* Home Section */}
         <section id="home" className="section home-section">
-          <div className="container">
+          <div className="hero-shapes" aria-hidden="true">
+            <span className="hero-shape hero-shape-circle" />
+            <span className="hero-shape hero-shape-square" />
+            <span className="hero-shape hero-shape-triangle" />
+          </div>
+          <div className="container hero-inner">
             <h1 className="hero-title">Software Engineer</h1>
             <p className="hero-subtitle">
               Crafting beautiful and functional user experiences
