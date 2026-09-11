@@ -25,11 +25,25 @@ function ProjectCard({ project }) {
         {project.isTestFlight && (
           <span className="project-badge">TestFlight</span>
         )}
+        {project.isComingSoon && (
+          <span className="project-badge project-badge-coming-soon">Coming Soon</span>
+        )}
       </div>
       <p className="project-description">
         {project.description}
       </p>
-      {project.hasIframe && project.url ? (
+      {project.isComingSoon ? (
+        <div className="project-embed project-embed-placeholder project-coming-soon">
+          <div className="embed-placeholder-content">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+            <p>Coming Soon</p>
+            <span className="embed-placeholder-subtitle">New work on the way</span>
+          </div>
+        </div>
+      ) : project.hasIframe && project.url ? (
         <a
           href={project.url}
           target="_blank"

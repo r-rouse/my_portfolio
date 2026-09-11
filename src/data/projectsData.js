@@ -9,14 +9,6 @@ export const projectsData = [
   },
   {
     id: 2,
-    title: "Whole Food Calories",
-    description: "A comprehensive nutrition tool for tracking calories and nutritional information for whole foods, helping users make informed dietary choices.",
-    url: "https://wholefoodcalories.com/",
-    tags: ["React", "Nutrition", "Data"],
-    hasIframe: true
-  },
-  {
-    id: 3,
     title: "Retail Scraper",
     description: "A web scraping tool for retail data analysis, enabling users to extract and analyze product information from various retail websites efficiently.",
     url: "https://retailscraper.streamlit.app/",
@@ -24,13 +16,22 @@ export const projectsData = [
     hasIframe: false
   },
   {
-    id: 4,
+    id: 3,
     title: "San Jose Flat Tire Tracker",
     description: "A TestFlight iOS app that allows users to tag locations where they got flat tires on their bikes in San Jose. The goal is to crowd-source data and lobby the city to sweep certain high-risk areas, making cycling safer for everyone.",
     url: null,
     tags: ["React Native", "iOS", "TestFlight", "Crowdsourcing", "Civic Tech"],
     hasIframe: false,
     isTestFlight: true
+  },
+  {
+    id: 4,
+    title: "New Projects",
+    description: "Fresh builds are in the works. Check back soon for the next release.",
+    url: null,
+    tags: ["Coming Soon"],
+    hasIframe: false,
+    isComingSoon: true
   }
 ];
 

@@ -437,6 +437,20 @@
   white-space: nowrap;
 }
 
+.project-badge-coming-soon {
+  background: var(--bauhaus-blue);
+  color: var(--white);
+}
+
+.project-coming-soon {
+  cursor: default;
+  pointer-events: none;
+}
+
+.project-coming-soon:hover {
+  background: var(--gray-100);
+}
+
 .project-embed-link {
   display: block;
   text-decoration: none;
