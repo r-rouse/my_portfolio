@@ -6,7 +6,7 @@
   node_bundler = "esbuild"
   # The chat function reads the knowledge base from content/*.md at runtime
   # (see lib/rag/loadDocuments.ts). Bundle those files with the function.
-  included_files = ["content/**"]
+  included_files = ["content/**", "src/components/journal/*.md"]
 
 # SPA fallback. Function routes (e.g. /api/chat via config.path in
 # netlify/functions/chat.mts) are matched before this catch-all.

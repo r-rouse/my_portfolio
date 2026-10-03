@@ -1,19 +1,32 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import './Navigation.css';
 import { trackSectionNavigation, trackExternalLink } from '../hooks/usePortfolioAnalytics';
 
+const ABOUT_LINKS = [
+  { id: 'bio', label: 'Bio' },
+  { id: 'hobbies', label: 'Hobbies' },
+  { id: 'favorites', label: 'Favorites' },
+];
+
 function Navigation() {
   const location = useLocation();
   const navigate = useNavigate();
+  const isAbout = location.pathname === '/about';
   const isAnalytics = location.pathname === '/analytics';
+  const isJournal = location.pathname === '/journal';
   const [menuOpen, setMenuOpen] = useState(false);
+  const [aboutOpen, setAboutOpen] = useState(false);
+  const aboutRef = useRef(null);
 
-  const closeMenu = () => setMenuOpen(false);
+  const closeMenu = () => {
+    setMenuOpen(false);
+    setAboutOpen(false);
+  };
 
   useEffect(() => {
     closeMenu();
-  }, [location.pathname]);
+  }, [location.pathname, location.hash]);
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : '';
@@ -25,13 +38,36 @@ function Navigation() {
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth > 768) {
-        closeMenu();
+        setMenuOpen(false);
       }
     };
 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  useEffect(() => {
+    if (!aboutOpen) return undefined;
+
+    const handlePointerDown = (event) => {
+      if (aboutRef.current && !aboutRef.current.contains(event.target)) {
+        setAboutOpen(false);
+      }
+    };
+
+    const handleEscape = (event) => {
+      if (event.key === 'Escape') {
+        setAboutOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handlePointerDown);
+    document.addEventListener('keydown', handleEscape);
+    return () => {
+      document.removeEventListener('mousedown', handlePointerDown);
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [aboutOpen]);
 
   const goToSection = (sectionId) => {
     trackSectionNavigation(sectionId);
@@ -48,6 +84,22 @@ function Navigation() {
         document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
       }, 50);
     });
+  };
+
+  const goToAbout = (sectionId) => {
+    trackSectionNavigation(sectionId);
+    closeMenu();
+
+    const hash = `#${sectionId}`;
+    if (location.pathname === '/about') {
+      if (location.hash !== hash) {
+        navigate(`/about${hash}`);
+      }
+      document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
+
+    navigate(`/about${hash}`);
   };
 
   const goHome = () => {
@@ -85,6 +137,35 @@ function Navigation() {
           id="nav-menu"
           className={`nav-links ${menuOpen ? 'nav-links-open' : ''}`}
         >
+          <div
+            className={`nav-dropdown ${aboutOpen ? 'nav-dropdown-open' : ''}`}
+            ref={aboutRef}
+          >
+            <button
+              type="button"
+              className={`nav-dropdown-toggle ${isAbout ? 'nav-page-link-active' : ''}`}
+              aria-expanded={aboutOpen}
+              aria-haspopup="true"
+              aria-controls="about-menu"
+              onClick={() => setAboutOpen((open) => !open)}
+            >
+              About
+              <span className="nav-dropdown-caret" aria-hidden="true" />
+            </button>
+            <div id="about-menu" className="nav-dropdown-menu" role="menu">
+              {ABOUT_LINKS.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  role="menuitem"
+                  onClick={() => goToAbout(item.id)}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <button type="button" onClick={() => goToSection('resume')}>Resume</button>
           <button type="button" onClick={() => goToSection('projects')}>Projects</button>
           <Link
@@ -93,6 +174,13 @@ function Navigation() {
             onClick={closeMenu}
           >
             Analytics
+          </Link>
+          <Link
+            to="/journal"
+            className={`nav-page-link ${isJournal ? 'nav-page-link-active' : ''}`}
+            onClick={closeMenu}
+          >
+            Journal Log
           </Link>
           <div className="nav-contact-links">
             <a

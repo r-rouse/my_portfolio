@@ -207,6 +207,9 @@ function App() {
         <section id="projects" className="section projects-section">
           <div className="container">
             <h2 className="section-title">Projects</h2>
+            <p className="projects-intro">
+              These are things I’ve built for myself and actually use. They’re not meant to scale, become products, or be production-ready. They exist because I had a problem to solve, an idea I wanted to explore, or something I was curious enough about to build.
+            </p>
             <div className="projects-grid">
               {projectsData.map((project) => (
                 <ProjectCard key={project.id} project={project} />

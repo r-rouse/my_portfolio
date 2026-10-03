@@ -20,6 +20,7 @@ const KNOWLEDGE_BASE_FILES = [
   'experience.md',
   'projects.md',
   'skills.md',
+  'favorites.md',
 ] as const;
 
 const moduleDir = path.dirname(fileURLToPath(import.meta.url));

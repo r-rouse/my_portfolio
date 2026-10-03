@@ -122,6 +122,7 @@
   border-bottom-color: var(--bauhaus-red);
 }
 
+/* ── About ── */
 /* ── Resume ── */
 .resume-section {
   background: var(--gray-100);
@@ -376,6 +377,13 @@
 /* ── Projects ── */
 .projects-section {
   background: var(--white);
+}
+
+.projects-intro {
+  max-width: 42rem;
+  margin: 0.75rem 0 0;
+  color: var(--ink-secondary);
+  line-height: 1.7;
 }
 
 .projects-grid {

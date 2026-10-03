@@ -7,10 +7,15 @@
  */
 
 import 'dotenv/config';
-import express from 'express';
+import express, { type Request as ExpressRequest } from 'express';
 import cors from 'cors';
 import { POST as chatPOST } from '../app/api/chat/route';
 import { POST as analyticsPOST, GET as analyticsGET } from '../app/api/analytics/route';
+import {
+  DELETE as journalDELETE,
+  GET as journalGET,
+  POST as journalPOST,
+} from '../app/api/journal/route';
 
 const app = express();
 const PORT = Number(process.env.API_PORT ?? 3001);
@@ -45,6 +50,42 @@ app.post('/api/analytics', async (req, res) => {
 
 app.get('/api/analytics', async (_req, res) => {
   const response = await analyticsGET();
+  const data = await response.json();
+  res.status(response.status).json(data);
+});
+
+function journalRequest(req: ExpressRequest, method: string): Request {
+  const url = new URL(req.originalUrl, `http://localhost:${PORT}`);
+  const headers = new Headers();
+  const code = req.header('x-journal-code');
+  if (code) {
+    headers.set('x-journal-code', code);
+  }
+  if (method !== 'GET' && method !== 'DELETE') {
+    headers.set('Content-Type', 'application/json');
+  }
+
+  return new Request(url, {
+    method,
+    headers,
+    body: method === 'POST' ? JSON.stringify(req.body) : undefined,
+  });
+}
+
+app.get('/api/journal', async (req, res) => {
+  const response = await journalGET(journalRequest(req, 'GET'));
+  const data = await response.json();
+  res.status(response.status).json(data);
+});
+
+app.post('/api/journal', async (req, res) => {
+  const response = await journalPOST(journalRequest(req, 'POST'));
+  const data = await response.json();
+  res.status(response.status).json(data);
+});
+
+app.delete('/api/journal', async (req, res) => {
+  const response = await journalDELETE(journalRequest(req, 'DELETE'));
   const data = await response.json();
   res.status(response.status).json(data);
 });
