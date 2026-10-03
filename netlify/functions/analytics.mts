@@ -19,7 +19,7 @@ export default async function handler(
   _context: Context
 ): Promise<Response> {
   if (request.method === 'GET') {
-    return GET();
+    return GET(request);
   }
 
   if (request.method === 'POST') {

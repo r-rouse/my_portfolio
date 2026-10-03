@@ -8,6 +8,16 @@
   # (see lib/rag/loadDocuments.ts). Bundle those files with the function.
   included_files = ["content/**", "src/components/journal/*.md"]
 
+# Baseline browser security headers for the static site + API responses where applied.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    Cross-Origin-Opener-Policy = "same-origin"
+
 # SPA fallback. Function routes (e.g. /api/chat via config.path in
 # netlify/functions/chat.mts) are matched before this catch-all.
 [[redirects]]

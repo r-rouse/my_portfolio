@@ -132,6 +132,8 @@ export default function JournalPage() {
   const [expanded, setExpanded] = useState<Set<string>>(() => new Set());
   const [date, setDate] = useState(todayISO);
   const [body, setBody] = useState('');
+  const [writeCode, setWriteCode] = useState('');
+  const [needsWriteCode, setNeedsWriteCode] = useState(false);
   const [status, setStatus] = useState('');
   const [busy, setBusy] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -219,11 +221,16 @@ export default function JournalPage() {
     event.preventDefault();
     if (!body.trim()) return;
 
-    const accessCode = getStoredJournalCode();
+    const accessCode = getStoredJournalCode() || writeCode.trim();
     setBusy(true);
     setStatus('');
     try {
       const file = await createJournalFile({ date, body }, accessCode);
+      if (accessCode) {
+        storeJournalCode(accessCode);
+        setWriteCode('');
+        setNeedsWriteCode(false);
+      }
       setFiles((prev) => [file, ...prev.filter((item) => item.id !== file.id)]);
       setExpanded((prev) => new Set(prev).add(file.id));
       setBody('');
@@ -231,8 +238,8 @@ export default function JournalPage() {
       setStatus(`Saved ${file.id}`);
     } catch (error) {
       if (error instanceof Error && error.message === 'Unauthorized') {
-        handleLock();
-        setUnlockError('That code is no longer valid.');
+        setNeedsWriteCode(true);
+        setStatus('Enter the journal access code to save.');
         return;
       }
       setStatus(error instanceof Error ? error.message : 'Could not save');
@@ -310,6 +317,20 @@ export default function JournalPage() {
           placeholder="What moved forward today? Saved as a new .md file."
           required
         />
+
+        {(needsWriteCode || !getStoredJournalCode()) && (
+          <>
+            <label htmlFor="journal-write-code">Access code (required to save)</label>
+            <input
+              id="journal-write-code"
+              type="password"
+              autoComplete="current-password"
+              value={writeCode}
+              onChange={(event) => setWriteCode(event.target.value)}
+              required={needsWriteCode}
+            />
+          </>
+        )}
 
         {status && <p className="journal-status">{status}</p>}
         <button type="submit" disabled={busy || !body.trim()}>

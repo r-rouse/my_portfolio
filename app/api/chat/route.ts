@@ -4,31 +4,42 @@
  * Architecture position:
  *   UI → (fetch) → API route (this file) → Chat Service → Retrieval → OpenAI
  *
- * Written as a Web-standard Request/Response handler so it can be mounted by
- * any Node server (see server/dev-server.ts) or migrated to Next.js App Router
- * with minimal changes.
+ * Hardened with rate limits, body size caps, and message length validation.
  */
 
 import { generateAnswer } from '../../../lib/ai/chat';
-import type { ChatRequest, ChatResponse } from '../../../lib/types/chat';
+import {
+  BODY_LIMITS,
+  FIELD_LIMITS,
+  RATE_LIMITS,
+  guardApiRequest,
+} from '../../../lib/security';
+import { clampString, jsonError, readJsonBody } from '../../../lib/security/request';
+import type { ChatResponse } from '../../../lib/types/chat';
 
 export async function POST(request: Request): Promise<Response> {
-  try {
-    const body = (await request.json()) as ChatRequest;
+  return guardApiRequest(request, RATE_LIMITS.chatPost, async () => {
+    const parsed = await readJsonBody<{ message?: unknown }>(
+      request,
+      BODY_LIMITS.chat
+    );
+    if (!parsed.ok) return parsed.response;
 
-    if (!body.message?.trim()) {
-      return Response.json({ error: 'Message is required' }, { status: 400 });
+    const message = clampString(parsed.value.message, FIELD_LIMITS.chatMessage);
+    if (!message) {
+      return jsonError(
+        `Message is required and must be at most ${FIELD_LIMITS.chatMessage} characters`,
+        400
+      );
     }
 
-    const answer = await generateAnswer(body.message.trim());
-    const response: ChatResponse = { answer };
-
-    return Response.json(response);
-  } catch (error) {
-    console.error('[POST /api/chat]', error);
-    return Response.json(
-      { error: 'Failed to generate a response' },
-      { status: 500 }
-    );
-  }
+    try {
+      const answer = await generateAnswer(message);
+      const response: ChatResponse = { answer };
+      return Response.json(response);
+    } catch (error) {
+      console.error('[POST /api/chat]', error);
+      return jsonError('Failed to generate a response', 500);
+    }
+  });
 }
