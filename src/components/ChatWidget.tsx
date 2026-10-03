@@ -1,10 +1,14 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ChatWindow from './ChatWindow';
 import { trackEvent } from '../../lib/analytics/trackEvent';
 import './Chat.css';
 
 function ChatWidget() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
+
+  useEffect(() => {
+    trackEvent('chat_opened');
+  }, []);
 
   const handleToggle = () => {
     setIsOpen((prev) => {

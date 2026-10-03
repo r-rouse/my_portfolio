@@ -180,7 +180,7 @@ function Navigation() {
             className={`nav-page-link ${isJournal ? 'nav-page-link-active' : ''}`}
             onClick={closeMenu}
           >
-            Journal Log
+            Work Log
           </Link>
           <div className="nav-contact-links">
             <a

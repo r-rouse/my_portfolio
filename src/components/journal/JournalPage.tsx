@@ -6,8 +6,12 @@ import {
   fetchJournalFiles,
   getStoredJournalCode,
   storeJournalCode,
+  verifyJournalWriteAccess,
 } from '../../services/journalService';
+import LogEtymologyTooltip from './LogEtymology';
 import './Journal.css';
+
+type ComposerView = 'closed' | 'gate' | 'form';
 
 function todayISO(): string {
   const now = new Date();
@@ -130,6 +134,9 @@ export default function JournalPage() {
   const [unlockError, setUnlockError] = useState('');
   const [files, setFiles] = useState<JournalFile[]>([]);
   const [expanded, setExpanded] = useState<Set<string>>(() => new Set());
+  const [composer, setComposer] = useState<ComposerView>('closed');
+  const [gateCode, setGateCode] = useState('');
+  const [gateError, setGateError] = useState('');
   const [date, setDate] = useState(todayISO);
   const [body, setBody] = useState('');
   const [status, setStatus] = useState('');
@@ -212,14 +219,71 @@ export default function JournalPage() {
     setCode('');
     setFiles([]);
     setExpanded(new Set());
+    setComposer('closed');
     setBody('');
+    setGateCode('');
+    setGateError('');
+  };
+
+  const closeComposer = () => {
+    setComposer('closed');
+    setGateCode('');
+    setGateError('');
+    setStatus('');
+    setBody('');
+    setDate(todayISO());
+  };
+
+  const openComposer = async () => {
+    const stored = getStoredJournalCode();
+    if (!stored) {
+      setComposer('gate');
+      setGateError('');
+      return;
+    }
+
+    setBusy(true);
+    setGateError('');
+    try {
+      await verifyJournalWriteAccess(stored);
+      setComposer('form');
+    } catch {
+      clearJournalCode();
+      setComposer('gate');
+      setGateError('Enter the access code to add an entry.');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const handleGateUnlock = async (event: FormEvent) => {
+    event.preventDefault();
+    const trimmed = gateCode.trim();
+    if (!trimmed) return;
+
+    setBusy(true);
+    setGateError('');
+    try {
+      await verifyJournalWriteAccess(trimmed);
+      storeJournalCode(trimmed);
+      setGateCode('');
+      setComposer('form');
+    } catch (error) {
+      setGateError(error instanceof Error ? error.message : 'Access denied');
+    } finally {
+      setBusy(false);
+    }
   };
 
   const handleSave = async (event: FormEvent) => {
     event.preventDefault();
-    if (!body.trim()) return;
-
     const accessCode = getStoredJournalCode();
+    if (!body.trim() || !accessCode) {
+      setComposer('gate');
+      setGateError('Enter the access code to save.');
+      return;
+    }
+
     setBusy(true);
     setStatus('');
     try {
@@ -229,10 +293,12 @@ export default function JournalPage() {
       setBody('');
       setDate(todayISO());
       setStatus(`Saved ${file.id}`);
+      setComposer('closed');
     } catch (error) {
       if (error instanceof Error && error.message === 'Unauthorized') {
-        handleLock();
-        setUnlockError('That code is no longer valid.');
+        clearJournalCode();
+        setComposer('gate');
+        setGateError('That access code is not valid.');
         return;
       }
       setStatus(error instanceof Error ? error.message : 'Could not save');
@@ -253,7 +319,9 @@ export default function JournalPage() {
     return (
       <main className="journal-page">
         <section className="journal-lock">
-          <h1 className="journal-title">Journal Log</h1>
+          <h1 className="journal-title">
+            Work <LogEtymologyTooltip />
+          </h1>
           <p className="journal-subtitle">Enter the access code to open your notes.</p>
           <form className="journal-form" onSubmit={handleUnlock}>
             <label htmlFor="journal-code">Access code</label>
@@ -279,10 +347,9 @@ export default function JournalPage() {
     <main className="journal-page">
       <header className="journal-header">
         <div>
-          <h1 className="journal-title">Journal Log</h1>
-          <p className="journal-subtitle">
-            Each <code>.md</code> in <code>src/components/journal/</code> is one entry.
-          </p>
+          <h1 className="journal-title">
+            Work <LogEtymologyTooltip />
+          </h1>
         </div>
         {authRequired && (
           <button type="button" className="journal-lock-btn" onClick={handleLock}>
@@ -291,31 +358,94 @@ export default function JournalPage() {
         )}
       </header>
 
-      <form className="journal-form journal-entry-form" onSubmit={handleSave}>
-        <label htmlFor="journal-date">Date</label>
-        <input
-          id="journal-date"
-          type="date"
-          value={date}
-          onChange={(event) => setDate(event.target.value)}
-          required
-        />
+      <div className="journal-compose">
+        {composer === 'closed' && (
+          <button
+            type="button"
+            className="journal-new-entry-btn"
+            onClick={openComposer}
+            disabled={busy}
+          >
+            {busy ? 'Checking…' : 'New entry'}
+          </button>
+        )}
 
-        <label htmlFor="journal-body">Notes</label>
-        <textarea
-          id="journal-body"
-          value={body}
-          onChange={(event) => setBody(event.target.value)}
-          rows={8}
-          placeholder="What moved forward today? Saved as a new .md file."
-          required
-        />
+        {composer === 'gate' && (
+          <form className="journal-form journal-entry-form" onSubmit={handleGateUnlock}>
+            <h2 className="journal-compose-title">Access required</h2>
+            <p className="journal-compose-copy">
+              Enter the access code to open the new-entry form.
+            </p>
+            <label htmlFor="journal-gate-code">Access code</label>
+            <input
+              id="journal-gate-code"
+              type="password"
+              autoComplete="current-password"
+              value={gateCode}
+              onChange={(event) => setGateCode(event.target.value)}
+              required
+              autoFocus
+            />
+            {gateError && <p className="journal-error">{gateError}</p>}
+            <div className="journal-compose-actions">
+              <button type="submit" disabled={busy || !gateCode.trim()}>
+                {busy ? 'Checking…' : 'Continue'}
+              </button>
+              <button
+                type="button"
+                className="journal-cancel-btn"
+                onClick={closeComposer}
+                disabled={busy}
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        )}
 
-        {status && <p className="journal-status">{status}</p>}
-        <button type="submit" disabled={busy || !body.trim()}>
-          {busy ? 'Saving…' : 'Save entry'}
-        </button>
-      </form>
+        {composer === 'form' && (
+          <form className="journal-form journal-entry-form" onSubmit={handleSave}>
+            <div className="journal-compose-heading">
+              <h2 className="journal-compose-title">New entry</h2>
+              <button
+                type="button"
+                className="journal-cancel-btn"
+                onClick={closeComposer}
+                disabled={busy}
+              >
+                Close
+              </button>
+            </div>
+
+            <label htmlFor="journal-date">Date</label>
+            <input
+              id="journal-date"
+              type="date"
+              value={date}
+              onChange={(event) => setDate(event.target.value)}
+              required
+            />
+
+            <label htmlFor="journal-body">Notes</label>
+            <textarea
+              id="journal-body"
+              value={body}
+              onChange={(event) => setBody(event.target.value)}
+              rows={8}
+              placeholder="What moved forward today? Saved as a new .md file."
+              required
+              autoFocus
+            />
+
+            {status && <p className="journal-status">{status}</p>}
+            <div className="journal-compose-actions">
+              <button type="submit" disabled={busy || !body.trim()}>
+                {busy ? 'Saving…' : 'Save entry'}
+              </button>
+            </div>
+          </form>
+        )}
+      </div>
 
       <section className="journal-list" aria-label="Journal markdown files">
         <h2>Entries</h2>

@@ -45,6 +45,24 @@ export async function fetchJournalFiles(code = ''): Promise<JournalFile[]> {
   return Array.isArray(data.files) ? data.files : [];
 }
 
+/** Confirms a write access code without creating an entry (auth runs before body validation). */
+export async function verifyJournalWriteAccess(code: string): Promise<void> {
+  const response = await fetch('/api/journal', {
+    method: 'POST',
+    headers: headers(code),
+    body: JSON.stringify({}),
+  });
+
+  if (response.status === 401 || response.status === 503) {
+    throw new Error(await readError(response, 'Unauthorized'));
+  }
+
+  // 400 = authorized but incomplete body — that means the code is valid.
+  if (response.status !== 400 && !response.ok) {
+    throw new Error(await readError(response, 'Could not verify access'));
+  }
+}
+
 export async function createJournalFile(
   entry: { date: string; body: string },
   code = ''

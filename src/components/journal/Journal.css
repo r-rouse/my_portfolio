@@ -7,10 +7,138 @@
 
 .journal-header,
 .journal-lock,
+.journal-compose,
 .journal-entry-form,
 .journal-list {
   max-width: 720px;
   margin: 0 auto;
+}
+
+.journal-compose {
+  margin-bottom: 2rem;
+}
+
+/* ── “Log” etymology tooltip ── */
+.log-tip {
+  position: relative;
+  display: inline-block;
+}
+
+.log-tip-trigger {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  line-height: inherit;
+  cursor: text;
+}
+
+.log-tip-trigger:hover,
+.log-tip-open .log-tip-trigger,
+.log-tip-trigger:focus-visible {
+  outline: none;
+}
+
+.log-tip-panel {
+  position: absolute;
+  top: calc(100% + 0.75rem);
+  left: 0;
+  z-index: 20;
+  width: min(28rem, calc(100vw - 2.5rem));
+  max-height: min(22rem, 60vh);
+  overflow-y: auto;
+  padding: 1rem 1.1rem 1.15rem;
+  border: 3px solid var(--black);
+  border-top: 6px solid var(--bauhaus-yellow);
+  background: var(--white);
+  color: var(--ink);
+  box-shadow: 6px 6px 0 var(--black);
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 400;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  animation: log-tip-in 0.18s ease both;
+}
+
+.log-tip-panel[hidden] {
+  display: none;
+}
+
+.log-tip-kicker {
+  display: inline-block;
+  margin-bottom: 0.55rem;
+  padding: 0.25rem 0.45rem;
+  background: var(--black);
+  color: var(--white);
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.log-tip-lineage {
+  display: block;
+  margin-bottom: 0.75rem;
+  padding: 0.55rem 0.65rem;
+  border-left: 4px solid var(--bauhaus-blue);
+  background: var(--gray-100);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.log-tip-text,
+.log-tip-close {
+  display: block;
+  margin: 0 0 0.7rem;
+  color: var(--ink-secondary);
+}
+
+.log-tip-text:last-of-type {
+  margin-bottom: 0.7rem;
+}
+
+.log-tip-close {
+  margin-bottom: 0;
+  color: var(--ink);
+  font-weight: 600;
+}
+
+@keyframes log-tip-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.35rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .log-tip-panel {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  @keyframes log-tip-in {
+    from {
+      opacity: 0;
+      transform: translateX(-50%) translateY(0.35rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(-50%);
+    }
+  }
 }
 
 .journal-header {
@@ -24,6 +152,7 @@
 }
 
 .journal-title {
+  position: relative;
   margin: 0 0 0.35rem;
   font-size: clamp(1.75rem, 4vw, 2.6rem);
   font-weight: 800;
@@ -56,7 +185,70 @@
   background: var(--white);
   border: 3px solid var(--black);
   padding: 1.5rem;
-  margin-bottom: 2rem;
+  margin-bottom: 0;
+}
+
+.journal-new-entry-btn {
+  border: 2px solid var(--black);
+  background: var(--bauhaus-red);
+  color: var(--white);
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.85rem 1.25rem;
+  cursor: pointer;
+}
+
+.journal-new-entry-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.journal-compose-title {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.journal-compose-copy {
+  margin: 0.35rem 0 0.5rem;
+  color: var(--ink-secondary);
+}
+
+.journal-compose-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.journal-compose-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.journal-compose-actions button {
+  margin-top: 0;
+}
+
+.journal-cancel-btn {
+  border: 2px solid var(--black);
+  background: var(--white) !important;
+  color: var(--black) !important;
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
 }
 
 .journal-form label {
