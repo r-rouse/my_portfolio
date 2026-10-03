@@ -26,7 +26,7 @@ I loved every minute of it.
 
 We traveled around the West and Midwest doing prescribed burns and wildfire work. I dug line, ran chainsaws, got very dirty, worked around helicopters, and spent plenty of nights cowboy camping. It was hard work, but I really enjoyed that life.
 
-At the end of the season, my partner took a job in Boston—which, unsurprisingly, doesn’t have a huge wildland firefighting industry.
+At the end of the season, my partner took a job in Boston which, unsurprisingly, doesn’t have a huge wildland firefighting industry.
 
 So I packed my bags and headed east.
 
@@ -38,7 +38,7 @@ So I used my savings to attend a coding bootcamp.
 
 It was possibly harder than firefighting, but I learned to code.
 
-Since then, I’ve worked professionally as a software engineer—first building a mobile application, then working on a large business-intelligence SaaS platform, and now working on agentic AI integration.
+Since then, I’ve worked professionally as a software engineer, first building a mobile application, then working on a large business-intelligence SaaS platform, and now working on agentic AI integration.
 
 It’s been a strange path: restaurants → ecology → wildland fire → software → AI.
 
@@ -48,6 +48,6 @@ If I could design my dream next chapter, I’d use the technical skills I’ve d
 
 Anyhow, that’s my story.
 
-I hope we can connect—and maybe work together.
+I hope we can connect and maybe work together.
 
 — Randall
