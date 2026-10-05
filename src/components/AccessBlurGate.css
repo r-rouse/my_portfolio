@@ -1,0 +1,103 @@
+.access-gate {
+  position: relative;
+  isolation: isolate;
+}
+
+.access-gate-loading {
+  min-height: 8rem;
+}
+
+.access-gate-blurred {
+  filter: blur(7px);
+  user-select: none;
+  pointer-events: none;
+  max-height: 28rem;
+  overflow: hidden;
+}
+
+.access-gate-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  background:
+    linear-gradient(180deg, rgba(244, 244, 244, 0.35), rgba(244, 244, 244, 0.72));
+}
+
+.access-gate-form {
+  width: min(100%, 22rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 1.35rem 1.4rem 1.45rem;
+  border: 3px solid var(--black);
+  background: var(--white);
+  box-shadow: 6px 6px 0 var(--black);
+}
+
+.access-gate-kicker {
+  margin: 0;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  display: inline-block;
+  align-self: flex-start;
+  padding: 0.3rem 0.5rem;
+  background: var(--black);
+  color: var(--white);
+}
+
+.access-gate-copy {
+  margin: 0.15rem 0 0.35rem;
+  color: var(--ink-secondary);
+  line-height: 1.5;
+}
+
+.access-gate-form label {
+  margin-top: 0.25rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.access-gate-form input {
+  width: 100%;
+  border: 2px solid var(--black);
+  border-radius: 0;
+  padding: 0.7rem 0.75rem;
+  font: inherit;
+  color: var(--ink);
+  background: var(--white);
+}
+
+.access-gate-form button {
+  margin-top: 0.55rem;
+  align-self: flex-start;
+  border: 2px solid var(--black);
+  background: var(--bauhaus-red);
+  color: var(--white);
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+}
+
+.access-gate-form button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.access-gate-error {
+  margin: 0.25rem 0 0;
+  color: var(--bauhaus-red);
+  font-weight: 600;
+  font-size: 0.9rem;
+}

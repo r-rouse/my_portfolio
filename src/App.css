@@ -137,6 +137,11 @@
   flex-wrap: wrap;
 }
 
+.resume-section-header-gated {
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
 .resume-section-header .section-title {
   margin-bottom: 0;
 }

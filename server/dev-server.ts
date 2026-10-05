@@ -16,6 +16,7 @@ import {
   GET as journalGET,
   POST as journalPOST,
 } from '../app/api/journal/route';
+import { POST as accessPOST } from '../app/api/access/route';
 
 const app = express();
 const PORT = Number(process.env.API_PORT ?? 3001);
@@ -86,6 +87,20 @@ app.post('/api/journal', async (req, res) => {
 
 app.delete('/api/journal', async (req, res) => {
   const response = await journalDELETE(journalRequest(req, 'DELETE'));
+  const data = await response.json();
+  res.status(response.status).json(data);
+});
+
+app.post('/api/access', async (req, res) => {
+  const request = new Request(`http://localhost:${PORT}/api/access`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-forwarded-for': req.ip ?? '',
+    },
+    body: JSON.stringify(req.body),
+  });
+  const response = await accessPOST(request);
   const data = await response.json();
   res.status(response.status).json(data);
 });

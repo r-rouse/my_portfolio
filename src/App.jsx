@@ -1,6 +1,7 @@
 import Footer from './components/Footer';
 import ProjectCard from './components/ProjectCard';
 import ChatWidget from './components/ChatWidget';
+import AccessBlurGate from './components/AccessBlurGate';
 import { projectsData } from './data/projectsData';
 import { usePortfolioAnalytics, trackResumeDownload, trackExternalLink } from './hooks/usePortfolioAnalytics';
 import './App.css';
@@ -44,8 +45,9 @@ function App() {
         {/* Resume Section */}
         <section id="resume" className="section resume-section">
           <div className="container">
-            <div className="resume-section-header">
-              <h2 className="section-title">Resume</h2>
+            <h2 className="section-title">Resume</h2>
+            <AccessBlurGate label="the resume">
+            <div className="resume-section-header resume-section-header-gated">
               <button type="button" className="resume-download-btn" onClick={downloadResume}>
                 Download Resume
               </button>
@@ -200,6 +202,7 @@ function App() {
                 </div>
               </div>
             </div>
+            </AccessBlurGate>
           </div>
         </section>
 

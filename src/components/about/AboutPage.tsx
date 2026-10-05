@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import bioMarkdown from '../../../BIO.md?raw';
 import { aboutPlaceholders, paragraphsFromBioMarkdown } from '../../data/aboutContent';
+import AccessBlurGate from '../AccessBlurGate';
 import './About.css';
 
 const bioParagraphs = paragraphsFromBioMarkdown(bioMarkdown);
@@ -30,11 +31,13 @@ export default function AboutPage() {
       <div className="about-page-content">
         <article id="bio" className="about-block">
           <h2 className="about-heading">Bio</h2>
-          {bioParagraphs.map((paragraph) => (
-            <p key={paragraph.slice(0, 48)} className="about-text">
-              {paragraph}
-            </p>
-          ))}
+          <AccessBlurGate label="the bio">
+            {bioParagraphs.map((paragraph) => (
+              <p key={paragraph.slice(0, 48)} className="about-text">
+                {paragraph}
+              </p>
+            ))}
+          </AccessBlurGate>
         </article>
 
         <article id="hobbies" className="about-block">
