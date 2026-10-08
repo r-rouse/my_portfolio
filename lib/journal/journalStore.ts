@@ -1,14 +1,15 @@
 /**
- * Work journal storage — one collapsible entry per markdown file in:
- *   src/components/journal/*.md
+ * Work journal storage.
  *
- * Saving creates a new .md file. Delete stays available via API; the public UI
- * does not expose a delete control.
+ * Local dev: one markdown file per entry in src/components/journal/*.md.
+ * Production (Netlify): the function filesystem is read-only, so new entries
+ * are stored in Netlify Blobs. Bundled *.md files are still listed when present.
  */
 
 import { access, mkdir, readdir, readFile, stat, unlink, writeFile } from 'node:fs/promises';
 import { basename, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import type { Store } from '@netlify/blobs';
 
 export interface JournalFile {
   /** Filename, e.g. WebKit_Continuous_Audio_Resume_Work_Log.md */
@@ -164,11 +165,136 @@ class MarkdownFilesJournalStore implements JournalStorage {
   }
 }
 
+const BLOB_STORE_NAME = 'journal';
+const BLOB_KEY = 'files';
+
+class BlobsJournalStore implements JournalStorage {
+  private store!: Store;
+
+  async init(): Promise<void> {
+    const { getStore } = await import('@netlify/blobs');
+    this.store = getStore({ name: BLOB_STORE_NAME, consistency: 'strong' });
+    await this.loadBlobs();
+  }
+
+  private async loadBlobs(): Promise<JournalFile[]> {
+    const data = await this.store.get(BLOB_KEY, { type: 'json' });
+    return Array.isArray(data) ? (data as JournalFile[]) : [];
+  }
+
+  async list(): Promise<JournalFile[]> {
+    const [disk, blobs] = await Promise.all([
+      readMarkdownDirectory().catch(() => [] as JournalFile[]),
+      this.loadBlobs(),
+    ]);
+    const byId = new Map<string, JournalFile>();
+    for (const file of disk) byId.set(file.id, file);
+    for (const file of blobs) byId.set(file.id, file);
+    return sortFiles([...byId.values()]);
+  }
+
+  async add(input: { date: string; body: string }): Promise<JournalFile> {
+    const files = await this.loadBlobs();
+    const file = buildJournalFile(input, files.map((entry) => entry.id));
+    files.push(file);
+    await this.store.setJSON(BLOB_KEY, files);
+    return file;
+  }
+
+  async remove(id: string): Promise<boolean> {
+    const safeName = basename(id);
+    if (safeName !== id || !safeName.endsWith('.md') || safeName.includes('..')) {
+      return false;
+    }
+    const files = await this.loadBlobs();
+    const next = files.filter((file) => file.id !== safeName);
+    if (next.length === files.length) return false;
+    await this.store.setJSON(BLOB_KEY, next);
+    return true;
+  }
+}
+
+function blobsContextAvailable(): boolean {
+  return Boolean(
+    process.env.NETLIFY_BLOBS_CONTEXT ||
+      process.env.NETLIFY ||
+      process.env.NETLIFY_LOCAL
+  );
+}
+
+async function readMarkdownDirectory(): Promise<JournalFile[]> {
+  const dir = await resolveJournalDir();
+  const names = await readdir(dir);
+  const markdownNames = names.filter(
+    (name) => name.endsWith('.md') && !name.startsWith('.')
+  );
+
+  const files = await Promise.all(
+    markdownNames.map(async (name) => {
+      const filePath = join(dir, name);
+      const content = await readFile(filePath, 'utf-8');
+      const { mtimeMs } = await stat(filePath);
+      return {
+        id: name,
+        title: titleFromMarkdown(name, content),
+        content,
+        date: dateFromFilename(name),
+        mtimeMs,
+      } satisfies JournalFile;
+    })
+  );
+
+  return files;
+}
+
+function buildJournalFile(
+  input: { date: string; body: string },
+  existingIds: string[]
+): JournalFile {
+  const firstLine = input.body.trim().split('\n')[0] ?? '';
+  const slug = slugify(firstLine.replace(/^#\s+/, '').slice(0, 60));
+  let filename = `${input.date}-${slug}.md`;
+  let attempt = 1;
+  const taken = new Set(existingIds);
+
+  while (taken.has(filename)) {
+    attempt += 1;
+    filename = `${input.date}-${slug}-${attempt}.md`;
+  }
+
+  const title = firstLine.replace(/^#\s+/, '').trim() || `Journal ${input.date}`;
+  const content = firstLine.startsWith('#')
+    ? `${input.body.trim()}\n`
+    : `# ${title}\n\n${input.body.trim()}\n`;
+
+  return {
+    id: filename,
+    title: titleFromMarkdown(filename, content),
+    content,
+    date: input.date,
+    mtimeMs: Date.now(),
+  };
+}
+
 let storePromise: Promise<JournalStorage> | null = null;
 
 export async function getJournalStore(): Promise<JournalStorage> {
   if (!storePromise) {
-    storePromise = Promise.resolve(new MarkdownFilesJournalStore());
+    storePromise = resolveStore();
   }
   return storePromise;
+}
+
+async function resolveStore(): Promise<JournalStorage> {
+  if (blobsContextAvailable()) {
+    try {
+      const blobs = new BlobsJournalStore();
+      await blobs.init();
+      return blobs;
+    } catch (error) {
+      console.error('[journalStore] Netlify Blobs unavailable:', error);
+    }
+  }
+
+  return new MarkdownFilesJournalStore();
 }

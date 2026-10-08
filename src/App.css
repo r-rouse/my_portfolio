@@ -408,8 +408,39 @@
 .project-card-embed {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   height: 100%;
+}
+
+.project-card-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.project-card-testflight .project-card-body {
+  overflow: hidden;
+}
+
+.project-card-testflight .beta-tester {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0;
+}
+
+.project-card-testflight .beta-tester-open {
+  min-height: 0;
+}
+
+.project-card-testflight .beta-tester-panel {
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: 14rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .project-header {
@@ -487,7 +518,7 @@
 
 .project-embed iframe {
   width: 100%;
-  height: 420px;
+  height: 320px;
   border: none;
   display: block;
 }
@@ -500,7 +531,7 @@
 }
 
 .project-embed-placeholder {
-  height: 280px;
+  height: 200px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -573,7 +604,7 @@
 
 .project-tags {
   margin-top: auto;
-  padding: 1rem 1.25rem 1.25rem;
+  padding: 0.85rem 1.25rem 1rem;
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
@@ -671,7 +702,7 @@
   }
 
   .project-embed-placeholder {
-    height: 220px;
+    height: 180px;
   }
 
   .resume-contact {

@@ -1,28 +1,80 @@
-.beta-tester-form {
-  margin-top: 1.25rem;
-  padding: 1.25rem;
-  background: var(--gray-100);
+.beta-tester {
+  margin: 1rem 1.25rem 0;
   border: 3px solid var(--black);
+  background: var(--gray-100);
 }
 
-.beta-form-title {
-  font-size: 0.95rem;
-  font-weight: 800;
+.beta-tester-open {
+  background: var(--white);
+}
+
+.beta-tester-toggle {
+  width: 100%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0.85rem 1rem;
+  border: 0;
+  background: transparent;
   color: var(--black);
-  margin: 0 0 0.5rem 0;
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  text-align: left;
+  cursor: pointer;
+}
+
+.beta-tester-toggle:hover {
+  background: var(--bauhaus-yellow);
+}
+
+.beta-tester-caret {
+  flex-shrink: 0;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-right: 2px solid var(--black);
+  border-bottom: 2px solid var(--black);
+  transform: rotate(-45deg);
+  transition: transform 0.15s ease;
+}
+
+.beta-tester-open .beta-tester-caret {
+  transform: rotate(45deg);
+}
+
+.beta-tester-panel {
+  border-top: 2px solid var(--black);
+  padding: 1rem;
+  background: var(--white);
+}
+
+.beta-tester-form {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
 }
 
 .beta-form-description {
   font-size: 0.85rem;
   color: var(--ink-secondary);
-  margin: 0 0 1.25rem 0;
+  margin: 0 0 1rem 0;
   line-height: 1.5;
 }
 
 .beta-form-group {
-  margin-bottom: 1rem;
+  margin-bottom: 0.85rem;
+}
+
+.beta-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
 }
 
 .beta-form-group label {
@@ -32,19 +84,18 @@
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--black);
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.35rem;
 }
 
 .beta-form-group input {
   width: 100%;
-  padding: 0.75rem;
+  padding: 0.7rem;
   border: 2px solid var(--black);
   border-radius: 0;
   font-size: 0.95rem;
   font-family: inherit;
   color: var(--black);
   background: var(--white);
-  transition: border-color 0.15s ease;
   box-sizing: border-box;
 }
 
@@ -54,18 +105,18 @@
 }
 
 .beta-form-error {
-  padding: 0.75rem;
+  padding: 0.7rem;
   background: var(--bauhaus-red);
   color: var(--white);
   border: 2px solid var(--black);
   font-size: 0.85rem;
   font-weight: 600;
-  margin-bottom: 1rem;
+  margin-bottom: 0.85rem;
 }
 
 .beta-form-submit {
   width: 100%;
-  padding: 0.85rem 1.5rem;
+  padding: 0.8rem 1.25rem;
   background: var(--bauhaus-blue);
   color: var(--white);
   border: 3px solid var(--black);
@@ -74,53 +125,42 @@
   letter-spacing: 0.12em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
   font-family: inherit;
 }
 
 .beta-form-submit:hover {
   background: var(--black);
-  transform: translate(-2px, -2px);
-  box-shadow: 4px 4px 0 var(--bauhaus-yellow);
 }
 
 .beta-form-submit:disabled {
   background: var(--gray-200);
   color: var(--ink-muted);
   cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-}
-
-.beta-form-submit:disabled:hover {
-  background: var(--gray-200);
-  transform: none;
-  box-shadow: none;
 }
 
 .beta-form-success {
   text-align: center;
-  padding: 2rem 1rem;
+  padding: 1.25rem 0.75rem;
   background: var(--bauhaus-yellow);
   border: 3px solid var(--black);
 }
 
 .beta-form-success svg {
   color: var(--black);
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
 }
 
 .beta-form-success p {
   color: var(--black);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 700;
   margin: 0;
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
 
-@media (max-width: 768px) {
-  .beta-tester-form {
-    padding: 1rem;
+@media (max-width: 520px) {
+  .beta-form-row {
+    grid-template-columns: 1fr;
   }
 }
